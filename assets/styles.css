@@ -1,0 +1,50 @@
+body {
+  font-family: verdana;
+}
+a {
+  text-decoration: none;
+}
+
+#departments {
+  display: flex;
+  justify-content: space-around;
+}
+
+#departments > div {
+  border: solid 1px #333;
+  padding: 5px;
+  border-radius: 5px;
+}
+#departments > div.selected {
+  background-color: dodgerBlue;
+  color: white;
+}
+
+#createForm {
+  background-color: #efefef;
+  border: solid 1px #333;
+  border-radius: 5px;
+  padding: 1em;
+}
+
+#URL {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  height: 5em;
+  border: solid 1px #333;
+  border-radius: 5px;
+}
+
+#URL input{
+  width: 80%;
+}
+
+.error {
+  color: red;
+}
+
+.user {
+  margin: 1rem;
+}
