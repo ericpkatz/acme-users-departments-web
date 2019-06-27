@@ -13787,16 +13787,24 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         user.departmentId = id;
       }
 
-      await axios__WEBPACK_IMPORTED_MODULE_1___default.a.post(`${this.state.URL}/api/users`, user);
-      this.loadData();
+      const {
+        data
+      } = await axios__WEBPACK_IMPORTED_MODULE_1___default.a.post(`${this.state.URL}/api/users`, user);
+      this.setState({
+        users: [...this.state.users, data]
+      });
     }
 
     if (entity === 'Department') {
-      const response = await axios__WEBPACK_IMPORTED_MODULE_1___default.a.post(`${this.state.URL}/api/departments`, {
+      const {
+        data
+      } = await axios__WEBPACK_IMPORTED_MODULE_1___default.a.post(`${this.state.URL}/api/departments`, {
         name
       });
-      this.loadData();
-      history.push(`/${response.data.id}`);
+      this.setState({
+        departments: [...this.state.departments, data]
+      });
+      history.push(`/${data.id}`);
     }
   }
 
@@ -13812,14 +13820,36 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   }
 
   async onUpdateDepartment(department) {
-    const updated = await axios__WEBPACK_IMPORTED_MODULE_1___default.a.put(`${this.state.URL}/api/departments/${department.id}`, department);
-    this.loadData();
+    const {
+      data
+    } = await axios__WEBPACK_IMPORTED_MODULE_1___default.a.put(`${this.state.URL}/api/departments/${department.id}`, department);
+    const departments = this.state.departments.map(_department => {
+      if (_department.id === data.id) {
+        return data;
+      }
+
+      return _department;
+    });
+    this.setState({
+      departments
+    });
   }
 
   async onUpdateUser(user, history) {
-    const response = await axios__WEBPACK_IMPORTED_MODULE_1___default.a.put(`${this.state.URL}/api/users/${user.id}`, user);
-    history.push(`/${response.data.departmentId ? response.data.departmentId : ''}`);
-    this.loadData();
+    const {
+      data
+    } = await axios__WEBPACK_IMPORTED_MODULE_1___default.a.put(`${this.state.URL}/api/users/${user.id}`, user);
+    const users = this.state.users.map(_user => {
+      if (_user.id === data.id) {
+        return data;
+      }
+
+      return _user;
+    });
+    this.setState({
+      users
+    });
+    history.push(`/${data.departmentId ? data.departmentId : ''}`);
   }
 
   setURL(ev) {
@@ -13945,6 +13975,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseError", function() { return parseError; });
 const parseError = error => {
   const _error = error.response.data;
+
+  if (_error.message) {
+    return _error.message;
+  }
 
   if (_error.errors && Array.isArray(_error.errors)) {
     return _error.errors[0].message;

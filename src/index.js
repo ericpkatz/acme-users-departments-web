@@ -31,13 +31,13 @@ class App extends React.Component{
       if(id){
         user.departmentId = id;
       }
-      await axios.post(`${this.state.URL}/api/users`, user);
-      this.loadData();
+      const { data } = await axios.post(`${this.state.URL}/api/users`, user);
+      this.setState({ users: [...this.state.users, data ] });
     }
     if(entity === 'Department'){
-      const response = await axios.post(`${this.state.URL}/api/departments`, { name });
-      this.loadData();
-      history.push(`/${response.data.id}`);
+      const { data } = await axios.post(`${this.state.URL}/api/departments`, { name });
+      this.setState({ departments: [...this.state.departments, data ]});
+      history.push(`/${data.id}`);
     }
   }
   async onDestroyDepartment(department, history){
@@ -50,13 +50,25 @@ class App extends React.Component{
     this.loadData();
   }
   async onUpdateDepartment(department){
-    const updated = await axios.put(`${this.state.URL}/api/departments/${department.id}`, department);
-    this.loadData();
+    const { data } = await axios.put(`${this.state.URL}/api/departments/${department.id}`, department);
+    const departments = this.state.departments.map( _department => {
+      if(_department.id === data.id){
+        return data;
+      }
+      return _department;
+    });
+    this.setState({ departments });
   }
   async onUpdateUser(user, history){
-    const response = await axios.put(`${this.state.URL}/api/users/${user.id}`, user);
-    history.push(`/${response.data.departmentId ? response.data.departmentId : ''}`);
-    this.loadData();
+    const { data } = await axios.put(`${this.state.URL}/api/users/${user.id}`, user);
+    const users = this.state.users.map( _user => {
+      if(_user.id === data.id){
+        return data;
+      }
+      return _user;
+    });
+    this.setState({ users });
+    history.push(`/${data.departmentId ? data.departmentId : ''}`);
   }
   setURL(ev){
     ev.preventDefault();
