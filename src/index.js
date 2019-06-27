@@ -100,13 +100,13 @@ class App extends React.Component{
     
     return (
       <HashRouter>
-        <h1><Link to='/'>Acme Users and Departments API</Link></h1>
+        <h1><Link to='/'>Acme Users and Departments <span className='gold' style={{ fontFamily: 'fantasy'}}>API</span></Link></h1>
         <div id='container'>
           <div id='left'>
           <form id='URL' onSubmit={ setURL } className='silk'>
             <h2>API Setup</h2>
             <div>
-              Select an api which supports the following routes:
+              Create an api which supports the following routes:
               <ul>
                 <li>GET, POST, PUT, DELETE /api/users/[:id]</li>
                 <li>GET, POST, PUT, DELETE /api/departments/[:id]</li>

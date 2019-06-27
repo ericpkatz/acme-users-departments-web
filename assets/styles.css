@@ -2,6 +2,7 @@ body {
   font-family: verdana;
   color: #373737;
   font-size: 1rem;
+  background-color: #F4F4F4;
 }
 a {
   text-decoration: none;
@@ -18,7 +19,7 @@ a {
 }
 
 #right {
-  flex: 1;
+  flex: 3;
 }
 
 
@@ -38,6 +39,24 @@ h2 {
 
 .silk {
   background-color: #DCD0C0;
+}
+
+.paper {
+  background-color: #F4F4F4;
+}
+
+.dark {
+  background-color: #373737;
+}
+
+.warning {
+  background-color: #F4F4F4;
+  color: #373737;
+}
+
+.danger {
+  background-color: #C0B283;
+  color: #F4F4F4;
 }
 
 button {
@@ -60,6 +79,10 @@ form > button {
 #departments {
   display: flex;
   justify-content: space-around;
+}
+#departments > * {
+  border-right: solid 1px #C0B283;
+  padding-right: 0.5rem;
 }
 
 .selected {
@@ -93,102 +116,3 @@ form > button {
 .error {
   color: red;
 }
-/*
-input[type=text] {
-  height: 1.75rem;
-  min-width: 225px;
-}
-button {
-  height: 1.75rem;
-  min-width: 100px;
-  background-color: #173F5F;
-  color: white;
-}
-
-button.danger {
-  background-color: #ED553B;
-  color: white;
-}
-
-button.warning {
-  background-color: #3CAEA3;
-  color: white;
-}
-
-.block {
-  width: 100%;
-}
-
-#departments {
-  display: flex;
-  justify-content: space-around;
-}
-
-#departments > div {
-  border: solid 1px #333;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-#departments > div {
-  display: flex;
-  align-items: center;
-
-}
-
-#departments > div.selected {
-  height: 10rem;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-
-#departments > div.selected a{
-  color: white;
-}
-
-#departments > div.selected input{
-  background-color: dodgerBlue;
-  border: solid 1px white;
-  color: white;
-}
-
-#createForm {
-  background-color: #efefef;
-  border: solid 1px #333;
-  border-radius: 5px;
-  padding: 1em;
-  display: flex;
-  flex-direction: column;
-}
-
-#URL {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  height: 5em;
-  border: solid 1px #333;
-  border-radius: 5px;
-  padding: 1rem;
-}
-
-#URL input, #URL button{
-  width: 100%;
-  font-size: 1.5rem;
-  height: 2rem;
-}
-
-.error {
-  color: red;
-}
-
-.user {
-  display: flex;
-  justify-content: space-between;
-  margin: 1rem;
-  border-bottom: solid 1px dodgerBlue;
-  padding: 1rem;
-}
-*/
