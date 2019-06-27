@@ -26,7 +26,7 @@ class App extends React.Component{
     this.onCreate = this.onCreate.bind(this);
   }
   async onCreate(id, entity, name, history){
-    if(entity === 'user'){
+    if(entity === 'User'){
       const user = { name };
       if(id){
         user.departmentId = id;
@@ -34,7 +34,7 @@ class App extends React.Component{
       await axios.post(`${this.state.URL}/api/users`, user);
       this.loadData();
     }
-    if(entity === 'department'){
+    if(entity === 'Department'){
       const response = await axios.post(`${this.state.URL}/api/departments`, { name });
       this.loadData();
       history.push(`/${response.data.id}`);
@@ -75,7 +75,7 @@ class App extends React.Component{
         axios.get(`${this.state.URL}/api/users`),
         axios.get(`${this.state.URL}/api/departments`)
       ]);
-      this.setState({ users: userResponse.data, departments: departmentsResponse.data });
+      this.setState({ users: userResponse.data, departments: departmentsResponse.data, error: ''});
     }
     catch(ex){
       console.log(ex);
@@ -89,19 +89,43 @@ class App extends React.Component{
     return (
       <HashRouter>
         <h1><Link to='/'>Acme Users and Departments API</Link></h1>
-        <div>
+        <div id='container'>
+          <div id='left'>
+          <form id='URL' onSubmit={ setURL } className='silk'>
+            <h2>API Setup</h2>
+            <div>
+              Select an api which supports the following routes:
+              <ul>
+                <li>GET, POST, PUT, DELETE /api/users/[:id]</li>
+                <li>GET, POST, PUT, DELETE /api/departments/[:id]</li>
+                <li>Make sure your routes support cors</li>
+              </ul>
+            </div>
+            <input type='text' name='URL' onChange={ onChange } value={ URL }/>
           { !!error && <div>{ error }</div>}
-          <form id='URL' onSubmit={ setURL }>
-            <input name='URL' onChange={ onChange } value={ URL }/>
             <button>Save</button>
           </form>
           <Route path='/:id?' render={ ({ match, history })=> <CreateForm match={ match } history={ history } onCreate={ onCreate }/> } />
+          </div>
+          <div id='right'>
+          <Route
+            path='/:id?'
+      render={({ match, history })=> <Departments match={ match } departments={ departments } users = { users } onUpdate={ onUpdateDepartment } onDestroy={ onDestroyDepartment } history={ history }/> }/>
+        <Route
+          path='/:id?'
+          render={({ match, history })=> <Users match={ match } departments={ departments } users = { users } onDestroy={ onDestroyUser } history={ history } onUpdate={ onUpdateUser }/> } />
+      { 
+          false && (<div>
+            <Route path='/:id?' render={ ({ match, history })=> <CreateForm match={ match } history={ history } onCreate={ onCreate }/> } />
           <Route
             path='/:id?'
       render={({ match, history })=> <Departments match={ match } departments={ departments } users = { users } onUpdate={ onUpdateDepartment } onDestroy={ onDestroyDepartment } history={ history }/> }/>
           <Route
             path='/:id?'
             render={({ match, history })=> <Users match={ match } departments={ departments } users = { users } onDestroy={ onDestroyUser } history={ history } onUpdate={ onUpdateUser }/> } />
+          </div>
+          )}
+        </div>
         </div>
       </HashRouter>
     );

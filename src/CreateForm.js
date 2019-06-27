@@ -7,15 +7,11 @@ export default class CreateForm extends React.Component{
     super(props);
     this.state = {
       name: '',
-      entity: 'department',
+      entity: 'Department',
       error: ''
     };
     this.onChange = this.onChange.bind(this);
     this.onCreate = this.onCreate.bind(this);
-    /*
-    this.onCancel = this.onCancel.bind(this);
-    this.onDestroy = this.onDestroy.bind(this);
-    */
   }
   async onCreate(ev){
     ev.preventDefault();
@@ -35,18 +31,21 @@ export default class CreateForm extends React.Component{
     const { onChange, onCreate } = this;
     return (
       <div>
-      { !!error && <div className='error'>{ error }</div> }
-      <form onSubmit={ onCreate } id='createForm'>
-        <div>
-          Department
-          <input type='radio' checked={ entity === 'department'} name='entity' value='department' onChange={ onChange }/>
+      <form className='gold' onSubmit={ onCreate } id='createForm'>
+        <h3>Create New { entity }</h3>
+        <div className='radio-group'>
+        {
+          ['Department', 'User'].map( _entity=> (
+            <label key={_entity}>
+              { _entity }
+              <input type='radio' checked={ entity === _entity } name='entity' value={ _entity } onChange={ onChange }/>
+            </label>
+          ))
+        }
         </div>
-        <div>
-          User
-          <input type='radio' name='entity' value='user' checked={ entity === 'user' } onChange={ onChange }/>
-        </div>
-        <input name='name' onChange={ onChange } value={ name } />
+        <input placeholder={`Enter name for ${entity}`} type='text' name='name' onChange={ onChange } value={ name } />
         <button>Create { entity }</button>
+      { !!error && <div className='error'>{ error }</div> }
       </form>
       </div>
     );

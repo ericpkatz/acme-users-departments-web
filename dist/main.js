@@ -13343,15 +13343,11 @@ class CreateForm extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
     super(props);
     this.state = {
       name: '',
-      entity: 'department',
+      entity: 'Department',
       error: ''
     };
     this.onChange = this.onChange.bind(this);
     this.onCreate = this.onCreate.bind(this);
-    /*
-    this.onCancel = this.onCancel.bind(this);
-    this.onDestroy = this.onDestroy.bind(this);
-    */
   }
 
   async onCreate(ev) {
@@ -13386,28 +13382,29 @@ class CreateForm extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
       onChange,
       onCreate
     } = this;
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, !!error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "error"
-    }, error), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      className: "gold",
       onSubmit: onCreate,
       id: "createForm"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Department", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Create New ", entity), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "radio-group"
+    }, ['Department', 'User'].map(_entity => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      key: _entity
+    }, _entity, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "radio",
-      checked: entity === 'department',
+      checked: entity === _entity,
       name: "entity",
-      value: "department",
+      value: _entity,
       onChange: onChange
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "User", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "radio",
-      name: "entity",
-      value: "user",
-      checked: entity === 'user',
-      onChange: onChange
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      placeholder: `Enter name for ${entity}`,
+      type: "text",
       name: "name",
       onChange: onChange,
       value: name
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Create ", entity)));
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Create ", entity), !!error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "error"
+    }, error)));
   }
 
 }
@@ -13427,13 +13424,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+
 
 
 class Department extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: this.props.department.name
+      name: this.props.department.name,
+      error: ''
     };
     this.onSave = this.onSave.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -13447,7 +13447,8 @@ class Department extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
 
   onCancel(ev) {
     this.setState({
-      name: this.props.department.name
+      name: this.props.department.name,
+      error: ''
     });
   }
 
@@ -13457,10 +13458,19 @@ class Department extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
     });
   }
 
-  onSave(ev) {
-    this.props.onUpdate({ ...this.props.department,
-      name: this.state.name
-    });
+  async onSave(ev) {
+    try {
+      await this.props.onUpdate({ ...this.props.department,
+        name: this.state.name
+      });
+      this.setState({
+        error: ''
+      });
+    } catch (ex) {
+      this.setState({
+        error: Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseError"])(ex)
+      });
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -13478,7 +13488,8 @@ class Department extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
       users
     } = this.props;
     const {
-      name
+      name,
+      error
     } = this.state;
     const {
       onSave,
@@ -13496,18 +13507,24 @@ class Department extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
       const changed = this.props.department.name !== name;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "selected"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        className: "block",
         value: name,
         onChange: onChange,
         name: "name"
-      }), " (", count, ")", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), changed && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: onCancel
+      }), " (", count, ")"), changed && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: onCancel,
+        className: "warning block"
       }, "Cancel"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: onSave
+        onClick: onSave,
+        className: "block"
       }, "Save")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: onDestroy,
-        disabled: false
-      }, "Destroy"));
+        className: "danger block"
+      }, "Destroy"), error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "error"
+      }, error));
     }
   }
 
@@ -13572,24 +13589,48 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+
 
 
 class User extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      name: this.props.user.name,
-      departmentId: this.props.user.departmentId || ''
-    };
+    const user = this.props.user;
+    const state = this.getInitialState(user);
+    this.state = state;
     this.onChange = this.onChange.bind(this);
     this.onSave = this.onSave.bind(this);
+    this.onCancel = this.onCancel.bind(this);
   }
 
-  onSave(ev) {
-    const user = { ...this.state,
-      id: this.props.user.id
+  getInitialState(user) {
+    return {
+      name: user.name,
+      departmentId: user.departmentId || '',
+      error: ''
     };
-    this.props.onUpdate(user);
+  }
+
+  onCancel(ev) {
+    this.setState(this.getInitialState(this.props.user));
+  }
+
+  async onSave(ev) {
+    try {
+      const user = { ...this.state,
+        id: this.props.user.id
+      };
+      await this.props.onUpdate(user);
+      this.setState({
+        error: ''
+      });
+    } catch (ex) {
+      console.log(ex);
+      this.setState({
+        error: Object(_utils__WEBPACK_IMPORTED_MODULE_2__["parseError"])(ex)
+      });
+    }
   }
 
   onChange(ev) {
@@ -13606,19 +13647,26 @@ class User extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     } = this.props;
     const {
       name,
-      departmentId
+      departmentId,
+      error
     } = this.state;
     const {
       onChange,
-      onSave
+      onSave,
+      onCancel
     } = this;
-    const changed = name !== this.props.user.name || this.props.user.departmentId !== departmentId;
+    const changedName = name !== this.props.user.name;
+    const changedDepartment = this.props.user.departmentId !== departmentId && (this.props.user.departmentId || departmentId);
+    const changed = changedName || changedDepartment;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "user"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       name: "name",
       onChange: onChange,
-      value: name
+      value: name,
+      type: "text"
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
       name: "departmentId",
       value: departmentId,
@@ -13628,11 +13676,17 @@ class User extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     }, "-- none --"), departments.map(department => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
       key: department.id,
       value: department.id
-    }, department.name))), changed && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, department.name))), changed && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0__["Fragment"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       onClick: onSave
     }, "Save"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      onClick: onDestroy
-    }, "Destroy"));
+      onClick: onCancel,
+      className: "warning"
+    }, "Cancel")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      onClick: onDestroy,
+      className: "danger"
+    }, "Destroy")), !!error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "error"
+    }, error));
   }
 
 }
@@ -13664,7 +13718,7 @@ __webpack_require__.r(__webpack_exports__);
   onUpdate
 }) => {
   const filtered = users.filter(user => !match.params.id && !user.departmentId || match.params && match.params.id === user.departmentId);
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Users"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     id: "users"
   }, filtered.map(user => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_User__WEBPACK_IMPORTED_MODULE_2__["default"], {
     key: user.id,
@@ -13672,7 +13726,7 @@ __webpack_require__.r(__webpack_exports__);
     departments: departments,
     onDestroy: () => onDestroy(user),
     onUpdate: user => onUpdate(user, history)
-  })));
+  }))));
 });
 
 /***/ }),
@@ -13724,7 +13778,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   }
 
   async onCreate(id, entity, name, history) {
-    if (entity === 'user') {
+    if (entity === 'User') {
       const user = {
         name
       };
@@ -13737,7 +13791,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       this.loadData();
     }
 
-    if (entity === 'department') {
+    if (entity === 'Department') {
       const response = await axios__WEBPACK_IMPORTED_MODULE_1___default.a.post(`${this.state.URL}/api/departments`, {
         name
       });
@@ -13789,7 +13843,8 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       const [userResponse, departmentsResponse] = await Promise.all([axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(`${this.state.URL}/api/users`), axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(`${this.state.URL}/api/departments`)]);
       this.setState({
         users: userResponse.data,
-        departments: departmentsResponse.data
+        departments: departmentsResponse.data,
+        error: ''
       });
     } catch (ex) {
       console.log(ex);
@@ -13817,14 +13872,20 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     } = this.state;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["HashRouter"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Link"], {
       to: "/"
-    }, "Acme Users and Departments API")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, !!error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, error), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+    }, "Acme Users and Departments API")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      id: "container"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      id: "left"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
       id: "URL",
-      onSubmit: setURL
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      onSubmit: setURL,
+      className: "silk"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "API Setup"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Select an api which supports the following routes:", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "GET, POST, PUT, DELETE /api/users/[:id]"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "GET, POST, PUT, DELETE /api/departments/[:id]"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "Make sure your routes support cors"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "text",
       name: "URL",
       onChange: onChange,
       value: URL
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Save")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Route"], {
+    }), !!error && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, error), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", null, "Save")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Route"], {
       path: "/:id?",
       render: ({
         match,
@@ -13834,7 +13895,9 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         history: history,
         onCreate: onCreate
       })
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Route"], {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      id: "right"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Route"], {
       path: "/:id?",
       render: ({
         match,
@@ -13860,7 +13923,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         history: history,
         onUpdate: onUpdateUser
       })
-    })));
+    }),  false && false)));
   }
 
 }

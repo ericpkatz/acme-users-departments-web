@@ -1,8 +1,121 @@
 body {
   font-family: verdana;
+  color: #373737;
+  font-size: 1rem;
 }
 a {
   text-decoration: none;
+  color: #373737;
+}
+
+#container {
+  display: flex;
+}
+
+#left {
+  flex: 1;
+}
+
+#right {
+  flex: 1;
+}
+
+
+input[type='text'], select{
+  height: 1.5rem;
+  min-width: 120px;
+  font-size: 1rem;
+}
+h2 {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.gold {
+  background-color: #C0B283;
+}
+
+.silk {
+  background-color: #DCD0C0;
+}
+
+button {
+  background-color: #373737;
+  color: #F4F4F4;
+  border-radius: 0.25rem;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5rem;
+}
+form > * {
+  font-size: 1rem;
+  margin: 0.5rem;
+}
+form > button {
+  padding: 0.5rem;
+}
+#departments {
+  display: flex;
+  justify-content: space-around;
+}
+
+.selected {
+  display: flex;
+  flex-direction: column;
+}
+.selected button {
+  padding: 0.5rem;
+}
+
+.selected > *{
+  margin-bottom: 0.5rem;
+}
+
+#users {
+  display: flex;
+  flex-direction: column;
+}
+#users > * {
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.user {
+  display: flex;
+}
+.row > *{
+  margin-right: 1.5rem;
+}
+.error {
+  color: red;
+}
+/*
+input[type=text] {
+  height: 1.75rem;
+  min-width: 225px;
+}
+button {
+  height: 1.75rem;
+  min-width: 100px;
+  background-color: #173F5F;
+  color: white;
+}
+
+button.danger {
+  background-color: #ED553B;
+  color: white;
+}
+
+button.warning {
+  background-color: #3CAEA3;
+  color: white;
+}
+
+.block {
+  width: 100%;
 }
 
 #departments {
@@ -15,8 +128,28 @@ a {
   padding: 5px;
   border-radius: 5px;
 }
+
+#departments > div {
+  display: flex;
+  align-items: center;
+
+}
+
 #departments > div.selected {
+  height: 10rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#departments > div.selected a{
+  color: white;
+}
+
+#departments > div.selected input{
   background-color: dodgerBlue;
+  border: solid 1px white;
   color: white;
 }
 
@@ -25,6 +158,8 @@ a {
   border: solid 1px #333;
   border-radius: 5px;
   padding: 1em;
+  display: flex;
+  flex-direction: column;
 }
 
 #URL {
@@ -35,10 +170,13 @@ a {
   height: 5em;
   border: solid 1px #333;
   border-radius: 5px;
+  padding: 1rem;
 }
 
-#URL input{
-  width: 80%;
+#URL input, #URL button{
+  width: 100%;
+  font-size: 1.5rem;
+  height: 2rem;
 }
 
 .error {
@@ -46,5 +184,10 @@ a {
 }
 
 .user {
+  display: flex;
+  justify-content: space-between;
   margin: 1rem;
+  border-bottom: solid 1px dodgerBlue;
+  padding: 1rem;
 }
+*/
