@@ -5,6 +5,7 @@ import Departments from './Departments';
 import Users from './Users';
 import CreateForm from './CreateForm';
 import { HashRouter, Route, Link } from 'react-router-dom';
+import path from 'path';
 
 
 class App extends React.Component{
@@ -31,26 +32,26 @@ class App extends React.Component{
       if(id){
         user.departmentId = id;
       }
-      const { data } = await axios.post(`${this.state.URL}/api/users`, user);
+      const { data } = await axios.post(path.join(this.state.URL, '/api/users'), user);
       this.setState({ users: [...this.state.users, data ] });
     }
     if(entity === 'Department'){
-      const { data } = await axios.post(`${this.state.URL}/api/departments`, { name });
+      const { data } = await axios.post(path.join(this.state.URL, '/api/departments'), { name });
       this.setState({ departments: [...this.state.departments, data ]});
       history.push(`/${data.id}`);
     }
   }
   async onDestroyDepartment(department, history){
-    const updated = await axios.delete(`${this.state.URL}/api/departments/${department.id}`);
+    const updated = await axios.delete(path.join(this.state.URL,`/api/departments/${department.id}`));
     this.loadData();
     history.push('/');
   }
   async onDestroyUser(user, history){
-    const updated = await axios.delete(`${this.state.URL}/api/users/${user.id}`);
+    const updated = await axios.delete(path.join(this.state.URL, `/api/users/${user.id}`));
     this.loadData();
   }
   async onUpdateDepartment(department){
-    const { data } = await axios.put(`${this.state.URL}/api/departments/${department.id}`, department);
+    const { data } = await axios.put(path.join(this.state.URL, `/api/departments/${department.id}`), department);
     const departments = this.state.departments.map( _department => {
       if(_department.id === data.id){
         return data;
@@ -60,7 +61,7 @@ class App extends React.Component{
     this.setState({ departments });
   }
   async onUpdateUser(user, history){
-    const { data } = await axios.put(`${this.state.URL}/api/users/${user.id}`, user);
+    const { data } = await axios.put(path.join(this.state.URL, `/api/users/${user.id}`), user);
     const users = this.state.users.map( _user => {
       if(_user.id === data.id){
         return data;
@@ -84,8 +85,8 @@ class App extends React.Component{
   async loadData(){
     try{
        const [ userResponse, departmentsResponse ] = await Promise.all([
-        axios.get(`${this.state.URL}/api/users`),
-        axios.get(`${this.state.URL}/api/departments`)
+        axios.get(path.join(this.state.URL, '/api/users')),
+        axios.get(path.join(this.state.URL, '/api/departments'))
       ]);
       this.setState({ users: userResponse.data, departments: departmentsResponse.data, error: ''});
     }
@@ -103,22 +104,27 @@ class App extends React.Component{
         <h1><Link to='/'>Acme Users and Departments <span className='gold' style={{ fontFamily: 'fantasy'}}>API</span></Link></h1>
         <div id='container'>
           <div id='left'>
-          <form id='URL' onSubmit={ setURL } className='silk'>
-            <h2>API Setup</h2>
-            <div>
-              Create an api which supports the following routes:
-              <ul>
-                <li>GET, POST, PUT, DELETE /api/users/[:id]</li>
-                <li>GET, POST, PUT, DELETE /api/departments/[:id]</li>
-                <li>Make sure your routes support cors</li>
-              </ul>
-            </div>
-            <input type='text' name='URL' onChange={ onChange } value={ URL }/>
-          { !!error && <div>{ error }</div>}
-            <button>Save</button>
-          </form>
-          <Route path='/:id?' render={ ({ match, history })=> <CreateForm match={ match } history={ history } onCreate={ onCreate }/> } />
+        { !error && <Route path='/:id?' render={ ({ match, history })=> <CreateForm match={ match } history={ history } onCreate={ onCreate }/> } /> }
+            <form id='URL' onSubmit={ setURL } className='silk'>
+              <h2>API Setup</h2>
+              <div>
+                Create an api which supports the following routes:
+                <ul>
+                  <li>RESTFUL GET, POST, PUT, DELETE /api/users/[:id]</li>
+                  <li>RESTFUL GET, POST, PUT, DELETE /api/departments/[:id]</li>
+                  <li>Make sure your routes support cors</li>
+                  <li>A User has a unique, non-null, non-empty name</li>
+                  <li>A User has an optional departmentId which references a Department</li>
+                  <li>A Department has a unique, non-null, non-empty name</li>
+                  <li>Bonus - A Department can have at most 5 users.</li>
+                </ul>
+              </div>
+              <input type='text' name='URL' onChange={ onChange } value={ URL }/>
+            { !!error && <div className='error'>{ error }</div>}
+              <button>Save</button>
+            </form>
           </div>
+          { !error && (
           <div id='right'>
           <Route
             path='/:id?'
@@ -126,18 +132,8 @@ class App extends React.Component{
         <Route
           path='/:id?'
           render={({ match, history })=> <Users match={ match } departments={ departments } users = { users } onDestroy={ onDestroyUser } history={ history } onUpdate={ onUpdateUser }/> } />
-      { 
-          false && (<div>
-            <Route path='/:id?' render={ ({ match, history })=> <CreateForm match={ match } history={ history } onCreate={ onCreate }/> } />
-          <Route
-            path='/:id?'
-      render={({ match, history })=> <Departments match={ match } departments={ departments } users = { users } onUpdate={ onUpdateDepartment } onDestroy={ onDestroyDepartment } history={ history }/> }/>
-          <Route
-            path='/:id?'
-            render={({ match, history })=> <Users match={ match } departments={ departments } users = { users } onDestroy={ onDestroyUser } history={ history } onUpdate={ onUpdateUser }/> } />
-          </div>
-          )}
         </div>
+          )}
         </div>
       </HashRouter>
     );
