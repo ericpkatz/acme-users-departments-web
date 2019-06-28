@@ -5,7 +5,8 @@ import Departments from './Departments';
 import Users from './Users';
 import CreateForm from './CreateForm';
 import { HashRouter, Route, Link } from 'react-router-dom';
-import path from 'path';
+import url from 'url';
+import path from 'path'
 
 
 class App extends React.Component{
@@ -33,26 +34,26 @@ class App extends React.Component{
       if(id){
         user.departmentId = id;
       }
-      const { data } = await axios.post(path.join(this.state.URL, '/api/users'), user);
+      const { data } = await axios.post(url.resolve(this.state.URL, '/api/users'), user);
       this.setState({ users: [...this.state.users, data ] });
     }
     if(entity === 'Department'){
-      const { data } = await axios.post(path.join(this.state.URL, '/api/departments'), { name });
+      const { data } = await axios.post(url.resolve(this.state.URL, '/api/departments'), { name });
       this.setState({ departments: [...this.state.departments, data ]});
       history.push(`/${data.id}`);
     }
   }
   async onDestroyDepartment(department, history){
-    const updated = await axios.delete(path.join(this.state.URL,`/api/departments/${department.id}`));
+    const updated = await axios.delete(url.resolve(this.state.URL,`/api/departments/${department.id}`));
     this.loadData();
     history.push('/');
   }
   async onDestroyUser(user, history){
-    const updated = await axios.delete(path.join(this.state.URL, `/api/users/${user.id}`));
+    const updated = await axios.delete(url.resolve(this.state.URL, `/api/users/${user.id}`));
     this.loadData();
   }
   async onUpdateDepartment(department){
-    const { data } = await axios.put(path.join(this.state.URL, `/api/departments/${department.id}`), department);
+    const { data } = await axios.put(url.resolve(this.state.URL, `/api/departments/${department.id}`), department);
     const departments = this.state.departments.map( _department => {
       if(_department.id === data.id){
         return data;
@@ -62,7 +63,7 @@ class App extends React.Component{
     this.setState({ departments });
   }
   async onUpdateUser(user, history){
-    const { data } = await axios.put(path.join(this.state.URL, `/api/users/${user.id}`), user);
+    const { data } = await axios.put(url.resolve(this.state.URL, `/api/users/${user.id}`), user);
     const users = this.state.users.map( _user => {
       if(_user.id === data.id){
         return data;
@@ -85,11 +86,11 @@ class App extends React.Component{
   }
   async loadData(){
     try{
-       console.log(path.join(this.state.URL, '/api/users')),
+       console.log(url.resolve(this.state.URL, '/api/users')),
        this.setState({ loading: true });
        const [ userResponse, departmentsResponse ] = await Promise.all([
-        axios.get(path.join(this.state.URL, '/api/users')),
-        axios.get(path.join(this.state.URL, '/api/departments'))
+        axios.get(url.resolve(this.state.URL, '/api/users')),
+        axios.get(url.resolve(this.state.URL, '/api/departments'))
       ]);
       this.setState({ users: userResponse.data, departments: departmentsResponse.data, error: '', loading: false});
     }
