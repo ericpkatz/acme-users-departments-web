@@ -15,7 +15,8 @@ class App extends React.Component{
       URL: localStorage.getItem('URL') || '',
       users: [],
       departments: [],
-      error: ''
+      error: '',
+      loading: false 
     };
     this.onChange = this.onChange.bind(this);
     this.setURL = this.setURL.bind(this);
@@ -84,20 +85,25 @@ class App extends React.Component{
   }
   async loadData(){
     try{
+       this.setState({ loading: true });
        const [ userResponse, departmentsResponse ] = await Promise.all([
         axios.get(path.join(this.state.URL, '/api/users')),
         axios.get(path.join(this.state.URL, '/api/departments'))
       ]);
-      this.setState({ users: userResponse.data, departments: departmentsResponse.data, error: ''});
+      this.setState({ users: userResponse.data, departments: departmentsResponse.data, error: '', loading: false});
     }
     catch(ex){
       console.log(ex);
-      this.setState({ error: ex.message });
+      this.setState({ error: ex.message, loading: false });
     }
   }
   render(){
     const { onChange, setURL, onUpdateDepartment, onDestroyDepartment, onCreate, onDestroyUser, onUpdateUser } = this;
-    const { URL, error, users, departments } = this.state;
+    const { loading, URL, error, users, departments } = this.state;
+
+    if(loading){
+      return <div id='loading'>Loading</div>;
+    }
     
     return (
       <HashRouter>
