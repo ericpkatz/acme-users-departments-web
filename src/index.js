@@ -85,6 +85,7 @@ class App extends React.Component{
   }
   async loadData(){
     try{
+       console.log(path.join(this.state.URL, '/api/users')),
        this.setState({ loading: true });
        const [ userResponse, departmentsResponse ] = await Promise.all([
         axios.get(path.join(this.state.URL, '/api/users')),
