@@ -21,6 +21,7 @@ class App extends React.Component{
     };
     this.onChange = this.onChange.bind(this);
     this.setURL = this.setURL.bind(this);
+    this.setDefaultURL = this.setDefaultURL.bind(this);
     this.onUpdateDepartment = this.onUpdateDepartment.bind(this);
     this.onUpdateUser = this.onUpdateUser.bind(this);
     this.onDestroyDepartment = this.onDestroyDepartment.bind(this);
@@ -73,6 +74,12 @@ class App extends React.Component{
     this.setState({ users });
     history.push(`/${data.departmentId ? data.departmentId : ''}`);
   }
+  setDefaultURL(){
+    const DEFAULT = 'https://prof-acme-user-departments-api.herokuapp.com/';
+    localStorage.setItem('URL', DEFAULT);
+    this.setState({ URL: DEFAULT });
+    this.loadData();
+  }
   setURL(ev){
     ev.preventDefault();
     localStorage.setItem('URL', this.state.URL);
@@ -100,7 +107,7 @@ class App extends React.Component{
     }
   }
   render(){
-    const { onChange, setURL, onUpdateDepartment, onDestroyDepartment, onCreate, onDestroyUser, onUpdateUser } = this;
+    const { onChange, setURL, onUpdateDepartment, onDestroyDepartment, onCreate, onDestroyUser, onUpdateUser, setDefaultURL } = this;
     const { loading, URL, error, users, departments } = this.state;
 
     if(loading){
@@ -129,7 +136,8 @@ class App extends React.Component{
               </div>
               <input type='text' name='URL' onChange={ onChange } value={ URL }/>
             { !!error && <div className='error'>{ error }</div>}
-              <button>Save</button>
+              <button onClick={ setURL }>User Your Own API</button>
+              <button onClick={ setDefaultURL }>Use Default API</button>
             </form>
           </div>
           { !error && (
