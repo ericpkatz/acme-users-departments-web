@@ -77,8 +77,9 @@ class App extends React.Component{
   setDefaultURL(){
     const DEFAULT = 'https://prof-acme-user-departments-api.herokuapp.com/';
     localStorage.setItem('URL', DEFAULT);
-    this.setState({ URL: DEFAULT });
-    this.loadData();
+    this.setState({ URL: DEFAULT }, ()=> {
+      this.loadData();
+    });
   }
   setURL(ev){
     ev.preventDefault();
