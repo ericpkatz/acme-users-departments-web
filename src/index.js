@@ -45,13 +45,14 @@ class App extends React.Component{
     }
   }
   async onDestroyDepartment(department, history){
-    const updated = await axios.delete(url.resolve(this.state.URL,`/api/departments/${department.id}`));
+    await axios.delete(url.resolve(this.state.URL,`/api/departments/${department.id}`));
     this.loadData();
     history.push('/');
   }
   async onDestroyUser(user, history){
     const updated = await axios.delete(url.resolve(this.state.URL, `/api/users/${user.id}`));
-    this.loadData();
+    const users = this.state.users.filter( _user => _user.id !== user.id);
+    this.setState({ users });
   }
   async onUpdateDepartment(department){
     const { data } = await axios.put(url.resolve(this.state.URL, `/api/departments/${department.id}`), department);
