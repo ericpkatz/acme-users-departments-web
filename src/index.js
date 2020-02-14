@@ -17,7 +17,8 @@ class App extends React.Component{
       users: [],
       departments: [],
       error: '',
-      loading: false 
+      loading: false,
+      axiosError: ''
     };
     this.onChange = this.onChange.bind(this);
     this.setURL = this.setURL.bind(this);
@@ -30,50 +31,75 @@ class App extends React.Component{
     this.onCreate = this.onCreate.bind(this);
   }
   async onCreate(id, entity, name, history){
-    if(entity === 'User'){
-      const user = { name };
-      if(id){
-        user.departmentId = id;
+    try{
+      if(entity === 'User'){
+        const user = { name };
+        if(id){
+          user.departmentId = id;
+        }
+        const { data } = await axios.post(url.resolve(this.state.URL, '/api/users'), user);
+        this.setState({ users: [...this.state.users, data ] });
       }
-      const { data } = await axios.post(url.resolve(this.state.URL, '/api/users'), user);
-      this.setState({ users: [...this.state.users, data ] });
+      if(entity === 'Department'){
+        const { data } = await axios.post(url.resolve(this.state.URL, '/api/departments'), { name });
+        this.setState({ departments: [...this.state.departments, data ]});
+        history.push(`/${data.id}`);
+      }
     }
-    if(entity === 'Department'){
-      const { data } = await axios.post(url.resolve(this.state.URL, '/api/departments'), { name });
-      this.setState({ departments: [...this.state.departments, data ]});
-      history.push(`/${data.id}`);
+    catch(ex){
+      this.setState({ axiosError: JSON.stringify(ex.response.data) });
     }
   }
   async onDestroyDepartment(department, history){
-    await axios.delete(url.resolve(this.state.URL,`/api/departments/${department.id}`));
-    this.loadData();
-    history.push('/');
+    try {
+      await axios.delete(url.resolve(this.state.URL,`/api/departments/${department.id}`));
+      this.loadData();
+      history.push('/');
+    }
+    catch(ex){
+      this.setState({ axiosError: JSON.stringify(ex.response.data) });
+    }
   }
   async onDestroyUser(user, history){
-    const updated = await axios.delete(url.resolve(this.state.URL, `/api/users/${user.id}`));
-    const users = this.state.users.filter( _user => _user.id !== user.id);
-    this.setState({ users });
+    try {
+      const updated = await axios.delete(url.resolve(this.state.URL, `/api/users/${user.id}`));
+      const users = this.state.users.filter( _user => _user.id !== user.id);
+      this.setState({ users });
+    }
+    catch(ex){
+      this.setState({ axiosError: JSON.stringify(ex.response.data) });
+    }
   }
   async onUpdateDepartment(department){
-    const { data } = await axios.put(url.resolve(this.state.URL, `/api/departments/${department.id}`), department);
-    const departments = this.state.departments.map( _department => {
-      if(_department.id === data.id){
-        return data;
-      }
-      return _department;
-    });
-    this.setState({ departments });
+    try{
+      const { data } = await axios.put(url.resolve(this.state.URL, `/api/departments/${department.id}`), department);
+      const departments = this.state.departments.map( _department => {
+        if(_department.id === data.id){
+          return data;
+        }
+        return _department;
+      });
+      this.setState({ departments });
+    }
+    catch(ex){
+      this.setState({ axiosError: JSON.stringify(ex.response.data) });
+    }
   }
   async onUpdateUser(user, history){
-    const { data } = await axios.put(url.resolve(this.state.URL, `/api/users/${user.id}`), user);
-    const users = this.state.users.map( _user => {
-      if(_user.id === data.id){
-        return data;
-      }
-      return _user;
-    });
-    this.setState({ users });
-    history.push(`/${data.departmentId ? data.departmentId : ''}`);
+    try {
+      const { data } = await axios.put(url.resolve(this.state.URL, `/api/users/${user.id}`), user);
+      const users = this.state.users.map( _user => {
+        if(_user.id === data.id){
+          return data;
+        }
+        return _user;
+      });
+      this.setState({ users });
+      history.push(`/${data.departmentId ? data.departmentId : ''}`);
+    }
+    catch(ex){
+      this.setState({ axiosError: JSON.stringify(ex.response.data) });
+    }
   }
   setDefaultURL(){
     const DEFAULT = 'https://prof-acme-user-departments-api.herokuapp.com/';
@@ -110,7 +136,7 @@ class App extends React.Component{
   }
   render(){
     const { onChange, setURL, onUpdateDepartment, onDestroyDepartment, onCreate, onDestroyUser, onUpdateUser, setDefaultURL } = this;
-    const { loading, URL, error, users, departments } = this.state;
+    const { loading, URL, error, users, departments, axiosError } = this.state;
 
     if(loading){
       return <div id='loading'>Loading</div>;
@@ -118,6 +144,10 @@ class App extends React.Component{
     
     return (
       <HashRouter>
+        {
+          !!axiosError && 
+        <div className='error'>{ axiosError } <a onClick={()=> this.setState({ axiosError: ''})}>dismiss</a></div>
+        }
         <h1><Link to='/'>Acme Users and Departments <span className='gold' style={{ fontFamily: 'fantasy'}}>API</span></Link></h1>
         <div id='container'>
           <div id='left'>
@@ -138,7 +168,7 @@ class App extends React.Component{
               </div>
               <input type='text' name='URL' onChange={ onChange } value={ URL }/>
             { !!error && <div className='error'>{ error }</div>}
-              <button onClick={ setURL }>User Your Own API</button>
+              <button onClick={ setURL }>User Your Own API (ie http://localhost/3000)</button>
               <button onClick={ setDefaultURL }>Use Default API</button>
             </form>
           </div>

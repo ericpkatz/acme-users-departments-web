@@ -116,3 +116,8 @@ form > button {
 .error {
   color: red;
 }
+.error a{
+  color: red;
+  text-decoration: underline;
+  cursor: pointer;
+}
