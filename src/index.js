@@ -166,9 +166,9 @@ class App extends React.Component{
                   <li>Bonus - A Department can have at most 5 users.</li>
                 </ul>
               </div>
-              <input type='text' name='URL' onChange={ onChange } value={ URL }/>
+              <input type='text' name='URL' onChange={ onChange } value={ URL } placeholder='Enter your server url...'/>
             { !!error && <div className='error'>{ error }</div>}
-              <button onClick={ setURL }>User Your Own API (ie http://localhost/3000)</button>
+              <button onClick={ setURL }>User Your Own API (ie http://localhost:3000)</button>
               <button onClick={ setDefaultURL }>Use Default API</button>
             </form>
           </div>
